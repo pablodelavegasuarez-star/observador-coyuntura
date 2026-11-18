@@ -1,0 +1,68 @@
+name: CI
+
+# Run on every pull request targeting main and on every push to main.
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+# Least privilege: the workflow token can only read the repository contents.
+permissions:
+  contents: read
+
+jobs:
+  backend-checks:
+    # Stable name: it is used as a required status check in main's branch protection.
+    # Renaming it would block every pull request until the protection is updated.
+    name: backend-checks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      # Third-party actions are pinned to a full commit SHA (tags can be moved).
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          version: "0.13.9"
+          working-directory: backend
+          enable-cache: false
+
+      - name: Install Python from .python-version
+        run: uv python install
+
+      # --locked installs exactly what uv.lock pins and fails if the lock is out of
+      # date with pyproject.toml. It also builds the project with uv_build (ADR-003).
+      - name: Install dependencies from uv.lock
+        id: deps
+        run: uv sync --locked
+
+      # Each check runs even if a previous check failed (so all errors show up at
+      # once), but only if the dependencies were installed successfully.
+      # Any failing check still makes the job fail.
+      - name: Lint (ruff check)
+        if: ${{ !cancelled() && steps.deps.outcome == 'success' }}
+        run: uv run --no-sync ruff check .
+
+      - name: Format check (ruff format)
+        if: ${{ !cancelled() && steps.deps.outcome == 'success' }}
+        run: uv run --no-sync ruff format --check .
+
+      - name: Type check (mypy)
+        if: ${{ !cancelled() && steps.deps.outcome == 'success' }}
+        run: uv run --no-sync mypy
+
+      - name: Tests (pytest)
+        if: ${{ !cancelled() && steps.deps.outcome == 'success' }}
+        run: uv run --no-sync pytest
+
+      - name: Vulnerability audit (pip-audit)
+        if: ${{ !cancelled() && steps.deps.outcome == 'success' }}
+        run: uv run --no-sync pip-audit
