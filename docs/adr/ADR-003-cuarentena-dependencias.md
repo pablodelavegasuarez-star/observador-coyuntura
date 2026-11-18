@@ -50,7 +50,8 @@ Es un proyecto de aprendizaje, sin necesidad de estrenar versiones el mismo día
 - **Herramienta de empaquetado (`uv_build`):** con uv 0.13.9 no se ve afectada por la cuarentena.
   - En local: verificado.
   - En la integración continua: **verificado** el 2026-11-18. El paso `uv sync --locked` instaló el proyecto con `uv_build` (uv 0.13.9, fijada en el workflow; ver [ADR-004](ADR-004-integracion-continua.md)) y terminó en verde: [ejecución 44380257479](https://github.com/pablodelavegasuarez-star/observatorio-pensiones/actions/runs/44380257479). Si se cambia la versión de uv del workflow, la propia integración continua lo volverá a comprobar en cada ejecución.
-  - En Render: pendiente, hasta que se configure el despliegue.
+  - En Render: **verificado** el 2026-11-18 en el primer despliegue (commit `f981561`). El registro de Render no es público, así que se citan los datos: «Using uv version 0.13.9 via environment variable UV_VERSION», «Using Python version 3.13.18 via backend/.python-version», «Built observatorio», 15 paquetes de producción instalados y comprobación de salud (`/health`) en verde.
+  - Nota: Render avisa «VIRTUAL_ENV=/opt/render/project/src/.venv does not match the project environment path .venv and will be ignored». Es inofensivo: con Root Directory `backend`, uv crea y usa el entorno del proyecto en `backend/.venv` e ignora la variable `VIRTUAL_ENV` del entorno de Render.
 
 ## Procedimiento de excepción para un parche de seguridad urgente
 
