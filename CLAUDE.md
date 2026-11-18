@@ -47,4 +47,6 @@ Se ejecutan desde la carpeta `backend/`. `uv run` usa siempre el entorno y las v
 
 Con la API arrancada: <http://127.0.0.1:8000/health> y documentación interactiva en <http://127.0.0.1:8000/docs>.
 
+GitHub CLI (`gh` 2.103.3, desde la raíz del repositorio): `gh pr create`, `gh pr checks <número>` y `gh run view <id> --log-failed`. Usa un token limitado a este repositorio (pull requests y lectura de Actions) que caduca el 2027-02-16; los `git push` siguen usando las credenciales de Git.
+
 (Se completará en la semana 2.)
