@@ -47,7 +47,10 @@ Es un proyecto de aprendizaje, sin necesidad de estrenar versiones el mismo día
 - **El resultado de `uv lock` depende del día:** regenerar el lock en otra fecha puede dar versiones distintas. Es lo esperado.
 - **El lock no caduca con el tiempo:** `uv.lock` guarda el plazo (`exclude-newer-span = "P7D"`), no una fecha, y las versiones ya fijadas no se vuelven a comprobar contra el corte. Se comprobó simulando el reloj de uv (variable interna de pruebas `UV_INTERNAL__TEST_CURRENT_TIMESTAMP`, uv 0.13.9) a +1 mes y +1 año: `uv lock --check` y `uv sync --locked` siguieron pasando, mientras que cambiar el plazo o las dependencias sin regenerar el lock sí hizo fallar la comprobación. Conviene repetir la comprobación si se actualiza uv, porque esa variable no forma parte de su interfaz documentada.
 - **Fricción al añadir dependencias:** `uv add` propone como mínimo la versión más reciente que admite la cuarentena; subir ese mínimo a mano a una versión en cuarentena hace fallar la resolución.
-- **Herramienta de empaquetado (`uv_build`):** con uv 0.13.9 en local no se ve afectada. Queda pendiente verificarlo con la versión de uv de la integración continua y de Render.
+- **Herramienta de empaquetado (`uv_build`):** con uv 0.13.9 no se ve afectada por la cuarentena.
+  - En local: verificado.
+  - En la integración continua: **verificado** el 2026-11-18. El paso `uv sync --locked` instaló el proyecto con `uv_build` (uv 0.13.9, fijada en el workflow; ver [ADR-004](ADR-004-integracion-continua.md)) y terminó en verde: [ejecución 44380257479](https://github.com/pablodelavegasuarez-star/observatorio-pensiones/actions/runs/44380257479). Si se cambia la versión de uv del workflow, la propia integración continua lo volverá a comprobar en cada ejecución.
+  - En Render: pendiente, hasta que se configure el despliegue.
 
 ## Procedimiento de excepción para un parche de seguridad urgente
 
