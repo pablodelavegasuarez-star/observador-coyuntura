@@ -32,4 +32,19 @@ La estructura de carpetas y los nombres de las capas se fijan en la semana 2 con
 
 ## Comandos habituales
 
-(Se completará en las semanas 1 y 2.)
+Se ejecutan desde la carpeta `backend/`. `uv run` usa siempre el entorno y las versiones fijadas en `uv.lock`.
+
+| Para qué | Comando |
+| --- | --- |
+| Instalar o sincronizar dependencias | `uv sync` |
+| Linter (revisión de estilo y errores) | `uv run ruff check .` |
+| Comprobar el formato | `uv run ruff format --check .` |
+| Aplicar el formato | `uv run ruff format .` |
+| Comprobación de tipos | `uv run mypy` |
+| Pruebas | `uv run pytest` |
+| Auditoría de vulnerabilidades | `uv run pip-audit` |
+| Arrancar la API en local | `uv run uvicorn observatorio.api.main:app --reload` |
+
+Con la API arrancada: <http://127.0.0.1:8000/health> y documentación interactiva en <http://127.0.0.1:8000/docs>.
+
+(Se completará en la semana 2.)
