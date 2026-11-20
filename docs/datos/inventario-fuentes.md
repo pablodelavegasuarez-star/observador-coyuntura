@@ -260,7 +260,7 @@ Fichas comunes a los indicadores 9 a 16: encuestas armonizadas de la Comisión E
 
 ### Crédito y financiero
 
-**Deuda de los hogares.** Se decidió mantener dos medidas complementarias:
+**Deuda de los hogares.** Pablo decidió mantener dos medidas complementarias (Decide: Pablo, 2026-11-20):
 - **A · saldo de deuda en % del PIB** (indicador 17). Mide la vulnerabilidad y es el concepto que usa el MIP.
 - **B · crédito** (indicadores 20 y 21). Es mensual y más sensible al giro del ciclo.
 
@@ -319,7 +319,7 @@ Fichas comunes a los indicadores 9 a 16: encuestas armonizadas de la Comisión E
 - **Clasificación:** sin clasificar.
 - **Organismo y códigos:** Banco de España · `BE_19_11.1` (API: `DN_1TI2TIE96`), importes totales estimados de nuevas operaciones de crédito para vivienda a hogares e ISFLSH.
 - **Periodicidad y fechas:** mensual · ⚠️ **2003-01** → 2026-09.
-- **Discontinuidad:** no. ⚠️ **Decisión registrada (opción a):** se usa el total desde 2003, que **incluye las renegociaciones**. Hasta 2014 la fuente no distingue el origen. Desde 2015-01 el BdE lo diferencia: renegociados `BE_19_11.2` (`DN_1TI2TIE97`) y sin renegociaciones `BE_19_11.3` (`DN_1TI2TIE98`). Estas dos series se guardan como desglose desde 2015; no se empalman.
+- **Discontinuidad:** no. ⚠️ **Decisión (Decide: Pablo, 2026-11-20), opción a:** Pablo decidió usar el total desde 2003, que **incluye las renegociaciones**. Hasta 2014 la fuente no distingue el origen. Desde 2015-01 el BdE lo diferencia: renegociados `BE_19_11.2` (`DN_1TI2TIE97`) y sin renegociaciones `BE_19_11.3` (`DN_1TI2TIE98`). Estas dos series se guardan como desglose desde 2015; no se empalman.
 - **Rupturas desde 2000:** sin notas en el catálogo; la diferenciación desde 2015 es un cambio de desglose, no de la serie total.
 - **Retraso:** pendiente (§8). **Calendario:** Banco de España.
 - **Ajustes:** sin ajuste.
@@ -333,7 +333,8 @@ Fichas comunes a los indicadores 9 a 16: encuestas armonizadas de la Comisión E
 - **Clasificación:** sin clasificar.
 - **Organismo y códigos:** Banco de España · `BE_4_3.12` (API: `D_BEEA2020`), «Entidades de crédito y EFC. Créditos a otros sectores residentes. Ratio de dudosidad».
 - **Periodicidad y fechas:** mensual · 1980-12 → 2026-08.
-- **⚠️ Cobertura:** «otros sectores residentes», es decir, **hogares y empresas juntos**. El BdE no publica una ratio solo de hogares. Publica los dudosos de hogares (`BE_4_13.17`, trimestral en la práctica, desde 1998-12) y el crédito a hogares (`BE_4_13.3`), pero calcular la ratio sería un cálculo propio, no la metodología oficial. Queda fuera.
+- **⚠️ Cobertura:** «otros sectores residentes», es decir, **hogares y empresas juntos**.
+- **Decisión (Decide: Pablo, 2026-11-20):** entra la ratio que publica el Banco de España para hogares y empresas juntos. Queda fuera una ratio solo de hogares, porque el BdE no la publica y obtenerla sería un cálculo propio, no la metodología oficial. El BdE sí publica sus dos piezas: los dudosos de hogares (`BE_4_13.17`, trimestral en la práctica, desde 1998-12) y el crédito a hogares (`BE_4_13.3`).
 - **Discontinuidad:** no. **Rupturas desde 2000:** sin notas en el catálogo; pendiente (§8).
 - **Retraso:** pendiente (§8). **Calendario:** Banco de España.
 - **Ajustes:** sin ajuste. **Desgloses:** entidades de depósito (`BE_4_53.12`) y EFC (`BE_4_83.13`).
@@ -423,7 +424,7 @@ Fichas comunes a los indicadores 9 a 16: encuestas armonizadas de la Comisión E
 - **Organismo y códigos:** INE · Estadística de Transmisiones de Derechos de la Propiedad (ETDP) · tabla 6150 · serie `ETDP1826` (total nacional, compraventa, número).
 - **Periodicidad y fechas:** mensual · ⚠️ **2007-01** → 2026-09. Definitivos hasta 2025-12; provisionales en 2026.
 - **Discontinuidad:** no.
-- **⚠️ Ajustes:** solo serie original; ninguna de las 17 tablas de la operación está corregida. **Decisión registrada:** entra sin desestacionalizar porque no existe otra medida que cubra el campo. La alternativa de Eurostat (`prc_hpi_hsnq`) tampoco está ajustada y empieza más tarde (2008-T1).
+- **⚠️ Ajustes:** solo serie original; ninguna de las 17 tablas de la operación está corregida. **Decisión (Decide: Pablo, 2026-11-20):** Pablo decidió incluirla sin desestacionalizar porque no existe otra medida que cubra el campo. La alternativa de Eurostat (`prc_hpi_hsnq`) tampoco está ajustada y empieza más tarde (2008-T1).
 - **Rupturas desde 2000:** no consta ninguna; pendiente de revisar la metodología del INE (§8).
 - **Retraso:** unos 48 días (septiembre de 2026 se publicó el 17-11-2026).
 - **Calendario:** INE.
@@ -560,12 +561,14 @@ El Comité de Fechado del Ciclo Económico Español de la Asociación Española 
 
 ## 9. Decisiones registradas durante el inventario
 
-- Los organismos fuera de Eurostat, INE y BdE se anotan para versiones posteriores (§7).
-- Las series que empiezan después de 2000 entran marcadas con ⚠️.
-- Las fuentes del semáforo no cuentan como candidatos.
-- La deuda de los hogares se sigue con dos medidas complementarias: saldo en % del PIB (17) y crédito (20 y 21).
-- Crédito nuevo para vivienda: opción a, total desde 2003 con renegociaciones; desglose de renegociados desde 2015.
-- Compraventas: entran sin desestacionalizar porque no hay otra medida que cubra el campo.
-- Morosidad: entra la ratio publicada para hogares y empresas juntos.
-- Componentes del CLI con fuente oficial: entran como candidatos (15, 16 y 23). El límite de 30 era orientativo.
-- No se empalman ni se retropolan series: solo se usan series enlazadas por la propia fuente.
+Todas las decisiones de esta sección las tomó Pablo. **Decide: Pablo · Fecha: 2026-11-20.**
+
+- Pablo decidió anotar para versiones posteriores los organismos que no son Eurostat, INE ni BdE (§7).
+- Pablo decidió incluir, marcadas con ⚠️, las series que empiezan después de 2000.
+- Pablo decidió que las fuentes del semáforo no cuenten como candidatos.
+- Pablo decidió seguir la deuda de los hogares con dos medidas complementarias: saldo en % del PIB (17) y crédito (20 y 21).
+- Pablo eligió la opción a para el crédito nuevo para vivienda: total desde 2003 con renegociaciones, y desglose de renegociados desde 2015.
+- Pablo decidió incluir las compraventas sin desestacionalizar porque no hay otra medida que cubra el campo.
+- Pablo decidió incluir la ratio de morosidad que publica el BdE para hogares y empresas juntos, y dejar fuera una ratio solo de hogares porque sería un cálculo propio.
+- Pablo decidió incluir como candidatos los componentes del CLI con fuente oficial (15, 16 y 23) y aclaró que el límite de 30 candidatos era orientativo.
+- Pablo fijó la regla de no empalmar ni retropolar series: solo se usan series enlazadas por la propia fuente.
