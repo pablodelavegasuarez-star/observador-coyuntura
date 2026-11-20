@@ -2,7 +2,7 @@
 
 ## Contexto
 
-Este repositorio es un proyecto de aprendizaje: un observatorio de pensiones en España, con indicadores fiscales basados en datos públicos y un simulador de la rentabilidad real de la pensión contributiva. Lo construye Pablo, consultor de negocio sin experiencia en desarrollo. El objetivo es que él entienda el proceso de desarrollo y tenga criterio técnico, no que el código se escriba lo más rápido posible.
+Este repositorio es un proyecto de aprendizaje: un observador de coyuntura para seguir una posible recesión en España. Reúne indicadores adelantados y coincidentes de fuentes oficiales (Eurostat, INE y Banco de España), los compara con las crisis de 2008, 2011-2012 y 2020, los resume en un semáforo de señales y ofrece un panel personal con usuario. Lo construye Pablo, consultor de negocio sin experiencia en desarrollo. El objetivo es que él entienda el proceso de desarrollo y tenga criterio técnico, no que el código se escriba lo más rápido posible.
 
 ## Reglas de trabajo
 
@@ -16,16 +16,20 @@ Este repositorio es un proyecto de aprendizaje: un observatorio de pensiones en 
 8. **Nunca debilites la cadena de calidad** para que algo pase: no desactives pruebas, comprobaciones de tipos, reglas del linter, pasos de la integración continua ni avisos de seguridad sin explicármelo y sin mi aprobación.
 9. **Cuando algo falle, no lo arregles directamente.** Dame primero una pista para que lo diagnostique yo. Si te pido la solución, entonces sí.
 10. **Secretos fuera del código.** Contraseñas, claves y cadenas de conexión van en variables de entorno (fichero `.env`, nunca versionado), nunca en el repositorio ni en el chat.
-11. **Reglas de pensiones con fuente.** Cada regla de cálculo lleva un comentario con su fuente oficial (BOE, Seguridad Social). Si no estás seguro de una regla, dilo y no la inventes.
+11. **Indicadores con metodología oficial.** Cada indicador y cada regla del semáforo siguen la metodología oficial de su fuente (Eurostat, INE, Banco de España), citada. Si no estás seguro, dilo y no lo inventes.
 12. **Datos ficticios.** Nunca uses datos personales reales en pruebas ni ejemplos.
 13. **Idioma.** Código, nombres y mensajes de commit en inglés. Documentación (README, ADR, metodología) en español. Conmigo hablas en español.
 14. **Pregunta antes de suponer.** Si falta un dato, una regla o una decisión, pregúntame o márcalo como pendiente. No rellenes huecos por tu cuenta.
+15. **Verificar antes de afirmar.** Antes de afirmar cómo funciona una herramienta o un servicio, compruébalo en su documentación oficial y cita la página. Si no está documentado, dilo.
+16. **GitHub Actions seguras.** Las acciones se fijan por el hash completo del commit, con la versión en un comentario, y cada workflow declara los permisos mínimos que necesita.
+17. **Mínimo privilegio.** Todo token, clave o acceso se crea con el alcance y la duración mínimos que requiere la tarea.
+18. **Nada provisional.** No se toman atajos para ver un resultado antes: cada pieza se construye como en la versión final.
 
 ## Arquitectura
 
 La estructura de carpetas y los nombres de las capas se fijan en la semana 2 con su ADR. Principios que ya rigen:
 
-- Separación por capas: ingesta de datos, almacenamiento, cálculos (indicadores, escenarios, simulador), API y frontend.
+- Separación por capas: ingesta de datos, almacenamiento, cálculos (transformaciones, comparación histórica y semáforo), API y frontend.
 - La capa de cálculos es pura: no depende de la API, la base de datos ni la interfaz, y se prueba sola.
 - El frontend no calcula nada: pide resultados a la API a través de su contrato OpenAPI.
 - La API no guarda estado propio; toda la configuración va en variables de entorno (ver `docs/adr/`).
