@@ -36,5 +36,5 @@ Motivos:
 ## Consecuencias
 
 - **Aceptamos:** el paquete Python (`observatorio`) y la URL pública de la API conservan el nombre anterior. El README lo explica.
-- **Pendiente de verificar:** que Render siga desplegando automáticamente tras el renombrado del repositorio. La documentación de Render no lo trata; se comprobará en el primer `merge` a `main` posterior al renombrado.
+- **Verificado (2026-11-20):** Render siguió desplegando automáticamente tras el renombrado del repositorio. Desplegó el `merge` del PR #8 (commit `c1689eb`), el primero posterior al renombrado. La documentación de Render no trata este caso; la comprobación se hizo en el propio servicio.
 - **Obligación:** los textos visibles de la API (título en `/docs` y en el contrato OpenAPI) usan el nombre nuevo.
