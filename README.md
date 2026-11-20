@@ -1,9 +1,11 @@
-# Observatorio de pensiones
+# Observador de coyuntura
 
-Observatorio de las pensiones en España con dos piezas:
+Observador de la coyuntura económica en España para seguir una posible recesión:
 
-- **Indicadores fiscales** del sistema de pensiones, construidos a partir de datos públicos.
-- **Simulador de la rentabilidad real** de la pensión contributiva: qué rendimiento, descontada la inflación, obtiene una persona por lo que ha cotizado.
+- **Indicadores adelantados y coincidentes** de fuentes oficiales: Eurostat, INE y Banco de España.
+- **Comparación histórica** con las crisis de 2008, 2011-2012 y 2020.
+- **Semáforo de señales** que resume lo que dicen los indicadores.
+- **Panel personal** con usuario.
 
 ## Estado
 
@@ -16,11 +18,13 @@ La API está desplegada en Render, en el plan gratuito (ver [ADR-001](docs/adr/A
 - Estado del servicio: <https://observatorio-pensiones-api.onrender.com/health>
 - Documentación interactiva: <https://observatorio-pensiones-api.onrender.com/docs>
 
+La URL conserva el nombre anterior del proyecto (ver [ADR-005](docs/adr/ADR-005-cambio-de-producto.md)).
+
 > **Aviso:** en el plan gratuito, el servicio se duerme tras 15 minutos sin recibir visitas y tarda alrededor de un minuto en despertar. Si la primera carga tarda, espera y vuelve a cargar la página.
 
 ## Aviso
 
-Este proyecto tiene fines divulgativos y de aprendizaje. No es asesoramiento financiero, fiscal ni jurídico. Para decisiones sobre tu pensión, consulta a la Seguridad Social o a un profesional.
+Este proyecto tiene fines divulgativos y de aprendizaje. No es asesoramiento financiero, fiscal ni jurídico.
 
 ## Licencia
 

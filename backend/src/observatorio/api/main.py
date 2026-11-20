@@ -1,11 +1,11 @@
-"""HTTP API entry point for the pensions observatory."""
+"""HTTP API entry point for the Spain business cycle monitor."""
 
 from typing import Literal
 
 from fastapi import FastAPI
 from pydantic import BaseModel
 
-app = FastAPI(title="Observatorio de pensiones API", version="0.1.0")
+app = FastAPI(title="Observador de coyuntura API", version="0.1.0")
 
 
 class HealthResponse(BaseModel):
