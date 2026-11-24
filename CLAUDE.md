@@ -27,10 +27,11 @@ Este repositorio es un proyecto de aprendizaje: un observador de coyuntura para 
 
 ## Arquitectura
 
-La estructura de carpetas y los nombres de las capas se fijan en la semana 2 con su ADR. Principios que ya rigen:
+Las capas, las carpetas y la regla de dependencias están fijadas en el [ADR-006](docs/adr/ADR-006-estructura-del-sistema.md): monolito modular y monorepo (`backend/` y `frontend/`). El paquete `observatorio` tiene cuatro módulos: `ingestion/`, `storage/`, `analytics/` y `api/`. La base de datos es PostgreSQL en todos los entornos, también en local ([ADR-009](docs/adr/ADR-009-base-de-datos.md)). Principios que rigen:
 
 - Separación por capas: ingesta de datos, almacenamiento, cálculos (transformaciones, comparación histórica y semáforo), API y frontend.
-- La capa de cálculos es pura: no depende de la API, la base de datos ni la interfaz, y se prueba sola.
+- Regla de dependencias (ADR-006): `analytics` no importa nada de `ingestion`, `storage` ni `api`; `api` depende de `analytics` y `storage`; `ingestion` depende de `storage`.
+- La capa de cálculos (`analytics`) es pura: no depende de la API, la base de datos ni la interfaz, y se prueba sola.
 - El frontend no calcula nada: pide resultados a la API a través de su contrato OpenAPI.
 - La API no guarda estado propio; toda la configuración va en variables de entorno (ver `docs/adr/`).
 
