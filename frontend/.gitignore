@@ -1,0 +1,8 @@
+# Installed dependencies (recreated with npm ci from package-lock.json)
+node_modules/
+
+# Build output
+dist/
+
+# Test coverage
+coverage/
