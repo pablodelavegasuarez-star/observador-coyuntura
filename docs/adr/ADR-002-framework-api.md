@@ -1,6 +1,6 @@
 # ADR-002 · Framework de la API
 
-- **Estado:** provisional, revisar en la semana 5
+- **Estado:** parcialmente sustituida (2026-11-24): la estructura de carpetas, por el [ADR-006](ADR-006-estructura-del-sistema.md); la comprobación de tipos, por el [ADR-010](ADR-010-comprobacion-de-tipos-python.md). Sigue vigente para FastAPI, provisional hasta el bloque 5.
 - **Fecha:** 2026-11-18
 - **Decide:** Pablo
 - **Revisar:** en la semana 5, cuando la API tenga endpoints reales y se prepare la migración a Cloud Run (ver [ADR-001](ADR-001-despliegue.md)).
