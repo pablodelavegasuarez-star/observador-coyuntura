@@ -2,7 +2,7 @@
 
 ## Contexto
 
-Este repositorio es un proyecto de aprendizaje: un observador de coyuntura para seguir una posible recesión en España. Reúne indicadores adelantados y coincidentes de fuentes oficiales (Eurostat, INE y Banco de España), los compara con las crisis de 2008, 2011-2012 y 2020, los resume en un semáforo de señales y ofrece un panel personal con usuario. Lo construye Pablo, consultor de negocio sin experiencia en desarrollo. El objetivo es que él entienda el proceso de desarrollo y tenga criterio técnico, no que el código se escriba lo más rápido posible.
+Este repositorio es un proyecto de aprendizaje: un observador de coyuntura para seguir una posible recesión en España. Reúne indicadores adelantados y coincidentes de fuentes oficiales (Eurostat, INE y Banco de España), los compara con las crisis de 2008, 2011-2013 y 2020, los resume en un semáforo de señales y ofrece un panel personal con usuario. Lo construye Pablo, consultor de negocio sin experiencia en desarrollo. El objetivo es que él entienda el proceso de desarrollo y tenga criterio técnico, no que el código se escriba lo más rápido posible.
 
 ## Reglas de trabajo
 
