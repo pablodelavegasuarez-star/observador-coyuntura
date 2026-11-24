@@ -126,3 +126,30 @@ Criterio: el menor número de herramientas que cumpla los requisitos (lockfile e
 
 - **Render:** cómo elige la versión de Node al compilar el sitio estático (si lee `.node-version`, `engines` de `package.json` o una variable de entorno), y si aplica `frontend/.npmrc`, la cuarentena y `ignore-scripts`. Se comprobará al crear el sitio ([ADR-008](ADR-008-frontend.md)).
 - **Comprobación de la antigüedad del lock en la CI:** ver «Cuarentena».
+
+## Seguimiento · 2026-11-24
+
+### Render: versión de Node (resuelto)
+
+Comprobado por Pablo al crear el sitio estático ([ADR-008](ADR-008-frontend.md), «Seguimiento»). Render lee `frontend/.node-version`. Línea del registro:
+
+> Using Node.js version 26.13.1 via /opt/render/project/src/frontend/.node-version
+
+Es el mismo mecanismo que la CI (`node-version-file`): las tres partes (local, CI y Render) usan la línea 26. La página [Render · Node version](https://render.com/docs/node-version) incluye `.node-version` entre las formas de fijar la versión.
+
+### Render: `frontend/.npmrc` (sigue pendiente)
+
+No hay evidencia directa en el registro de que Render aplique `frontend/.npmrc` (`min-release-age` e `ignore-scripts`), y las páginas de Render leídas no mencionan `.npmrc`.
+
+- **Hoy el efecto es limitado:** Render solo ejecuta `npm ci`, que instala lo que fija el lockfile, y la cuarentena no se aplica a lo ya fijado (ver «Cuarentena»).
+- **Lo que no está comprobado** es `ignore-scripts` en Render. El único paquete del árbol con script de instalación, `fsevents`, es exclusivo de macOS y no se instala en Linux.
+
+### Comprobación de la antigüedad del lock en la CI: no, por ahora
+
+**Decide Pablo (2026-11-24):** no se añade a la CI. Motivos:
+
+1. El lock solo se genera desde `frontend/`, con la cuarentena activa.
+2. Dependabot tendrá su propia espera de 7 días ([ADR-012](ADR-012-dependabot.md)).
+3. Cada cambio del lock se revisa en el PR.
+
+**Revisar** si otra herramienta empieza a generar locks.
