@@ -1,9 +1,9 @@
 # ADR-008 · Frontend
 
-- **Estado:** aceptada en el modelo de sitio estático, la librería de interfaz y la herramienta de compilación. **Pendiente de decisión de Pablo** en el alojamiento y en la librería de gráficos.
+- **Estado:** aceptada
 - **Fecha:** 2026-11-24
-- **Decide:** Pablo (sesión de tutor B del bloque 2)
-- **Revisar:** cuando Pablo elija el alojamiento y la librería de gráficos (se completa este ADR), y al construir el frontend en el bloque 6.
+- **Decide:** Pablo (sesión de tutor B del bloque 2; alojamiento y librería de gráficos elegidos el 2026-11-24 a partir de los anexos A y B)
+- **Revisar:** al construir el frontend en el bloque 6, al crear el sitio en Render (ver Consecuencias) o si el consumo de la cuota compartida con el backend se acerca al límite.
 
 ## Contexto
 
@@ -45,22 +45,59 @@ Para la librería de interfaz: ecosistema y soporte de la IA.
 
 1. **Sitio estático** (opción A): el alojamiento solo sirve ficheros; React se ejecuta en el navegador y pide los datos a la API.
 2. **React** como librería de interfaz y **Vite** como herramienta de compilación (opción C).
-3. **Alojamiento: pendiente de decisión de Pablo.** Comparación en el anexo A.
-4. **Librería de gráficos: pendiente de decisión de Pablo.** Comparación en el anexo B. D3 queda descartada por ser de demasiado bajo nivel.
+3. **Alojamiento: Render Static Sites** (comparación en el anexo A). Motivos:
+   - es el mismo proveedor que el backend;
+   - el sitio estático es gratis;
+   - la suspensión por inactividad solo está documentada para los servicios web, no para los sitios estáticos;
+   - permite configurar cabeceras de seguridad, necesarias en el bloque 8;
+   - crea una copia de prueba con su propia URL para cada PR.
+
+   Alternativas descartadas:
+   - **Cloudflare Pages:** la propia Cloudflare recomienda empezar los proyectos nuevos con Workers. Queda como **plan B**.
+   - **Netlify:** los créditos gratuitos se agotan rápido.
+   - **GitHub Pages:** las cabeceras de seguridad no están documentadas.
+4. **Librería de gráficos: Recharts** (comparación en el anexo B). Motivos:
+   - está hecha para React;
+   - dibuja las franjas de las recesiones con `ReferenceArea`;
+   - la accesibilidad viene activada por defecto;
+   - incluye los tipos;
+   - licencia MIT.
+
+   Alternativas descartadas:
+   - **ECharts:** la accesibilidad viene desactivada por defecto.
+   - **Chart.js:** necesita un complemento para las franjas y dibuja en `canvas`, que los lectores de pantalla no leen.
+   - **Plotly:** pesa mucho.
+   - **D3:** de demasiado bajo nivel.
 
 ## Consecuencias
 
-- Como el sitio es estático, cualquier alojamiento de ficheros sirve. La elección del anexo A no condiciona el código.
+- Como el sitio es estático, cualquier alojamiento de ficheros sirve. La elección del alojamiento no condiciona el código, y por eso Cloudflare Pages sirve como plan B.
 - El frontend tendrá su propia cadena de dependencias (npm) que auditar ([ADR-007](ADR-007-lenguaje-por-capa.md)).
-- **Pendiente de decisión de Pablo:** alojamiento (anexo A) y librería de gráficos (anexo B).
+- **1. Despliegue solo tras pasar la CI: pendiente de comprobar.** La documentación de Render describe la opción «After CI Checks Pass» para los despliegues en general: «Render triggers a deploy *only after* all of your repo's CI checks pass» ([Render · Deploying on Render](https://render.com/docs/deploys)). No dice expresamente que esté disponible para un sitio estático. Se comprobará en el panel de Render al crear el sitio. Si no lo está, se decidirá entonces entre desplegar a mano tras la CI o pasar a Cloudflare Pages.
+- **2. Cuota compartida con el backend.** El espacio de trabajo es del plan Hobby, que no tiene cuota mensual: «The Hobby plan does not have a monthly fee, so you only pay for usage» ([Render · Platform features by plan](https://render.com/docs/platform-features-by-plan)). Los sitios estáticos consumen la misma cuota que el backend: «Static sites count against your workspace's monthly included amounts of outbound bandwidth and pipeline minutes» ([Render · Static Sites](https://render.com/docs/static-sites)).
+  - **Ancho de banda:** el plan Hobby incluye 5 GB al mes. El exceso cuesta «$0.15 per GB for traffic sent over the public internet» ([Render · Outbound bandwidth](https://render.com/docs/outbound-bandwidth)). La misma página añade: «Always confirm the latest pricing on the pricing page». La página de precios no se pudo leer porque carga los datos de forma dinámica.
+  - **Minutos de compilación:** el plan Hobby incluye 500 al mes ([Render · Build pipeline](https://render.com/docs/build-pipeline)). El precio del exceso **no está documentado** en esa página: solo dice que se compra «a supplementary amount of minutes for your current tier». **Pendiente de verificar.**
+  - **Con tarjeta registrada:**
+    - Ancho de banda: «If you've linked a payment method, Render bills you for each additional GB of bandwidth» ([Render · Outbound bandwidth](https://render.com/docs/outbound-bandwidth), FAQ).
+    - Minutos: «you automatically purchase a supplementary amount of minutes for your current tier, unless: You've reached your monthly spend limit, or You haven't added a payment method» ([Render · Build pipeline](https://render.com/docs/build-pipeline)). Para los minutos existe un límite de gasto mensual configurable (misma página).
+  - **Sin tarjeta registrada, según la documentación:**
+    - Ancho de banda: «Render spins down your workspace's services until the start of the next month» ([Render · Outbound bandwidth](https://render.com/docs/outbound-bandwidth), FAQ). La página del plan gratuito dice «Render instead suspends all of your Free services for the remainder of the month» ([Render · Deploy for Free](https://render.com/docs/free)).
+    - Minutos: «Render stops running pipeline tasks (including service builds!) for the remainder of the current month» ([Render · Build pipeline](https://render.com/docs/build-pipeline)). Según la página del plan gratuito, los servicios siguen activos con su última compilación.
+    - **Pendiente de verificar:** si esa suspensión por ancho de banda afecta también al sitio estático. Las páginas hablan de los servicios del espacio de trabajo y de los servicios gratuitos, sin nombrar los sitios estáticos.
+  - **Pendiente de verificar:** qué hace Render si el cobro del exceso falla. No se ha encontrado en las páginas leídas.
+- **3. Límite de gasto:** Pablo limitará el gasto con una tarjeta de saldo limitado.
+- **4. Peso de Recharts: pendiente de medir** con la primera compilación del frontend.
+- **Copias de prueba por PR:** Render las crea también para los sitios estáticos, cada una con su propia URL `onrender.com`, y son gratis si el sitio es gratuito: «If your base service is a free static site, its PR previews are also free». Vienen desactivadas por defecto («By default, Render does *not* create PR previews») y hay que activarlas al crear el sitio ([Render · Service previews](https://render.com/docs/service-previews)).
 
 ## Anexo A · Alojamiento del sitio estático
+
+**Opción elegida: Render Static Sites** (ver Decisión). La comparación se conserva como registro.
 
 Comparación de Render Static Sites con alternativas gratuitas. Fuentes consultadas el 2026-11-24. «No documentado» significa que las páginas oficiales leídas no lo dicen; no es una confirmación de que no exista.
 
 | Criterio | Render Static Sites | GitHub Pages | Cloudflare Pages | Netlify |
 | --- | --- | --- | --- | --- |
-| **Plan gratuito y límites** | Gratis: «Static sites are fast and free to deploy». Consumen el ancho de banda y los minutos de compilación incluidos en el espacio de trabajo; la cantidad no figura en las páginas leídas (pendiente) [R1] | Gratis en repositorios públicos [G1]. Sitio de 1 GB como máximo, límite *blando* de 100 GB de ancho de banda al mes y de 10 compilaciones por hora («does not apply if you build and publish your site with a custom GitHub Actions workflow») [G2] | 500 compilaciones al mes, 20 000 ficheros y 25 MiB por fichero [C1]. Las peticiones a ficheros estáticos son «free and unlimited» [C2] | 300 créditos al mes con límite duro, sin recarga [N1]. Cada despliegue a producción cuesta 15 créditos y cada GB de ancho de banda, 20 [N2]. Cálculo propio: unos 15 GB al mes sin despliegues, o 20 despliegues sin tráfico |
+| **Plan gratuito y límites** | Gratis: «Static sites are fast and free to deploy». Consumen el ancho de banda y los minutos de compilación incluidos en el espacio de trabajo [R1]: en el plan Hobby, 5 GB al mes [R6] y 500 minutos al mes [R7] (cifras añadidas el 2026-11-24 al elegir el alojamiento; ver Consecuencias) | Gratis en repositorios públicos [G1]. Sitio de 1 GB como máximo, límite *blando* de 100 GB de ancho de banda al mes y de 10 compilaciones por hora («does not apply if you build and publish your site with a custom GitHub Actions workflow») [G2] | 500 compilaciones al mes, 20 000 ficheros y 25 MiB por fichero [C1]. Las peticiones a ficheros estáticos son «free and unlimited» [C2] | 300 créditos al mes con límite duro, sin recarga [N1]. Cada despliegue a producción cuesta 15 créditos y cada GB de ancho de banda, 20 [N2]. Cálculo propio: unos 15 GB al mes sin despliegues, o 20 despliegues sin tráfico |
 | **Despliegue solo tras pasar la CI** | Opción «After CI Checks Pass»: «Render triggers a deploy *only after* all of your repo's CI checks pass» [R2]. La página es general; que valga para sitios estáticos no está dicho expresamente (pendiente) | Publicación desde un workflow de Actions con `actions/upload-pages-artifact` y `actions/deploy-pages` [G3]. Que el despliegue espere a las pruebas depende del orden de los jobs del propio workflow; la página no lo describe | Subida directa desde la CI con Wrangler (`pages deploy`) [C3]. Las compilaciones automáticas desde Git se lanzan con cada push, sin esperar a la CI [C1] | Despliegue desde la CI con `netlify deploy --prod`, que no compila: la CI debe compilar antes [N3]. Se pueden detener las compilaciones automáticas: «stop builds while you use a continuous integration tool to run validations» [N4] |
 | **Dominio propio** | Sí, gratis y con TLS incluido: «TLS certificates are always included for free» [R1]. Dominios incluidos por plan: Hobby 2; el número para un espacio de trabajo sin plan no figura [R3] | Sí [G4], con HTTPS mediante certificado de Let's Encrypt y la opción «Enforce HTTPS» [G5] | Sí; un dominio raíz exige gestionar su DNS en Cloudflare [C4] | Sí, con HTTPS gratuito: «Netlify offers free HTTPS on all sites» [N5] |
 | **Cabeceras de seguridad** | Sí, configuradas en el panel de Render, por ruta [R4] | No documentado en las páginas leídas (pendiente) | Sí, fichero `_headers`, con un ejemplo de `Content-Security-Policy` [C5] | Sí, fichero `_headers` o `netlify.toml` [N6] |
@@ -74,6 +111,8 @@ Fuentes:
 - [R3] <https://render.com/docs/custom-domains>
 - [R4] <https://render.com/docs/static-site-headers>
 - [R5] <https://render.com/docs/free>
+- [R6] <https://render.com/docs/outbound-bandwidth>
+- [R7] <https://render.com/docs/build-pipeline>
 - [G1] <https://docs.github.com/en/get-started/learning-about-github/githubs-plans>
 - [G2] <https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits>
 - [G3] <https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site>
@@ -93,6 +132,8 @@ Fuentes:
 - [N6] <https://docs.netlify.com/routing/headers/>
 
 ## Anexo B · Librería de gráficos
+
+**Opción elegida: Recharts** (ver Decisión). La comparación se conserva como registro.
 
 Comparación de Recharts, ECharts, Chart.js y Plotly. Fuentes consultadas el 2026-11-24. El criterio de franjas se refiere a dibujar los periodos de recesión ([especificación del cuadro, §6](../datos/especificacion-cuadro.md)) sobre una serie temporal.
 
