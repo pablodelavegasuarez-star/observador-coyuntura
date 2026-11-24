@@ -3,7 +3,7 @@
 Observador de la coyuntura económica en España para seguir una posible recesión:
 
 - **Indicadores adelantados y coincidentes** de fuentes oficiales: Eurostat, INE y Banco de España.
-- **Comparación histórica** con las crisis de 2008, 2011-2012 y 2020.
+- **Comparación histórica** con las crisis de 2008, 2011-2013 y 2020.
 - **Semáforo de señales** que resume lo que dicen los indicadores.
 - **Panel personal** con usuario.
 
