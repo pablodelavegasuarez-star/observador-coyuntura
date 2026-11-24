@@ -66,3 +66,62 @@ jobs:
       - name: Vulnerability audit (pip-audit)
         if: ${{ !cancelled() && steps.deps.outcome == 'success' }}
         run: uv run --no-sync pip-audit
+
+  frontend-checks:
+    # Stable name: it is used as a required status check in main's branch protection.
+    # Renaming it would block every pull request until the protection is updated.
+    # It runs on every pull request, whatever it changes (ADR-011).
+    name: frontend-checks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      # Third-party actions are pinned to a full commit SHA (tags can be moved).
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # Node major version from frontend/.node-version (ADR-011). No dependency
+      # cache, so no run inherits state from another one (ADR-004).
+      - name: Install Node from .node-version
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: frontend/.node-version
+          package-manager-cache: false
+
+      # npm ci installs exactly what package-lock.json pins and fails if the lock
+      # does not match package.json. frontend/.npmrc disables install scripts.
+      - name: Install dependencies from package-lock.json
+        id: deps
+        run: npm ci
+
+      # Each check runs even if a previous check failed (so all errors show up at
+      # once), but only if the dependencies were installed successfully.
+      # Any failing check still makes the job fail.
+      - name: Lint (eslint)
+        if: ${{ !cancelled() && steps.deps.outcome == 'success' }}
+        run: npm run lint
+
+      - name: Format check (prettier)
+        if: ${{ !cancelled() && steps.deps.outcome == 'success' }}
+        run: npm run format:check
+
+      - name: Type check (tsc)
+        if: ${{ !cancelled() && steps.deps.outcome == 'success' }}
+        run: npm run typecheck
+
+      - name: Tests (vitest)
+        if: ${{ !cancelled() && steps.deps.outcome == 'success' }}
+        run: npm test
+
+      - name: Build (vite build)
+        if: ${{ !cancelled() && steps.deps.outcome == 'success' }}
+        run: npm run build
+
+      # Fails on any known vulnerability, including development dependencies.
+      - name: Vulnerability audit (npm audit)
+        if: ${{ !cancelled() && steps.deps.outcome == 'success' }}
+        run: npm audit --audit-level=low

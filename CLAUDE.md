@@ -37,6 +37,8 @@ Las capas, las carpetas y la regla de dependencias están fijadas en el [ADR-006
 
 ## Comandos habituales
 
+### Backend
+
 Se ejecutan desde la carpeta `backend/`. `uv run` usa siempre el entorno y las versiones fijadas en `uv.lock`.
 
 | Para qué | Comando |
@@ -51,6 +53,26 @@ Se ejecutan desde la carpeta `backend/`. `uv run` usa siempre el entorno y las v
 | Arrancar la API en local | `uv run uvicorn observatorio.api.main:app --reload` |
 
 Con la API arrancada: <http://127.0.0.1:8000/health> y documentación interactiva en <http://127.0.0.1:8000/docs>.
+
+### Frontend
+
+Se ejecutan desde la carpeta `frontend/`, con Node 26 (fijado en `frontend/.node-version`) y npm 11.10 o posterior. `frontend/.npmrc` aplica la cuarentena de 7 días y desactiva los scripts de instalación ([ADR-011](docs/adr/ADR-011-frontend-npm-node-ci.md)).
+
+| Para qué | Comando |
+| --- | --- |
+| Instalar exactamente lo que fija `package-lock.json` | `npm ci` |
+| Añadir una dependencia (pasa por la cuarentena) | `npm install <paquete>` (o `--save-dev`) |
+| Linter (ESLint) | `npm run lint` |
+| Comprobar el formato (Prettier) | `npm run format:check` |
+| Aplicar el formato | `npm run format` |
+| Comprobación de tipos (TypeScript) | `npm run typecheck` |
+| Pruebas (Vitest) | `npm test` |
+| Compilación del sitio estático (en `dist/`) | `npm run build` |
+| Auditoría de vulnerabilidades | `npm audit --audit-level=low` |
+| Arrancar el frontend en local | `npm run dev` |
+| Servir en local la compilación de `dist/` | `npm run preview` |
+
+Con el frontend arrancado: <http://localhost:5173>.
 
 GitHub CLI (`gh` 2.103.3, desde la raíz del repositorio): `gh pr create`, `gh pr checks <número>` y `gh run view <id> --log-failed`. Usa un token limitado a este repositorio (pull requests y lectura de Actions) que caduca el 2027-02-16; los `git push` siguen usando las credenciales de Git.
 

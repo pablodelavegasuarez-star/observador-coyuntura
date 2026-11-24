@@ -22,6 +22,19 @@ La URL conserva el nombre anterior del proyecto (ver [ADR-005](docs/adr/ADR-005-
 
 > **Aviso:** en el plan gratuito, el servicio se duerme tras 15 minutos sin recibir visitas y tarda alrededor de un minuto en despertar. Si la primera carga tarda, espera y vuelve a cargar la página.
 
+## Frontend en local
+
+El frontend es un sitio estático en TypeScript con React y Vite ([ADR-008](docs/adr/ADR-008-frontend.md)). Necesita Node 26 y npm 11.10 o posterior ([ADR-011](docs/adr/ADR-011-frontend-npm-node-ci.md)). Desde la carpeta `frontend/`:
+
+| Para qué | Comando |
+| --- | --- |
+| Instalar las dependencias | `npm ci` |
+| Arrancar en local (<http://localhost:5173>) | `npm run dev` |
+| Linter, formato y tipos | `npm run lint`, `npm run format:check` y `npm run typecheck` |
+| Pruebas | `npm test` |
+| Compilar el sitio (en `dist/`) | `npm run build` |
+| Auditoría de vulnerabilidades | `npm audit --audit-level=low` |
+
 ## Aviso
 
 Este proyecto tiene fines divulgativos y de aprendizaje. No es asesoramiento financiero, fiscal ni jurídico.

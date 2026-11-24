@@ -1,6 +1,6 @@
 # ADR-006 · Estructura del sistema
 
-- **Estado:** aceptada. Sustituye a la estructura provisional del [ADR-002](ADR-002-framework-api.md).
+- **Estado:** aceptada. Sustituye a la estructura provisional del [ADR-002](ADR-002-framework-api.md). La consecuencia sobre integración continua queda modificada por el [ADR-011](ADR-011-frontend-npm-node-ci.md): la CI ejecuta siempre las comprobaciones del backend y del frontend.
 - **Fecha:** 2026-11-24
 - **Decide:** Pablo (sesión de tutor B del bloque 2)
 - **Revisar:** si el volumen de datos o el número de personas que trabajan en el proyecto crece lo bastante como para justificar desplegar piezas por separado.
