@@ -1,0 +1,39 @@
+# Dependabot version updates (ADR-012).
+# Monthly, one grouped PR per ecosystem, 7-day cooldown to match the
+# dependency quarantine (ADR-003 exclude-newer, ADR-011 min-release-age).
+# Cooldown does not apply to security updates: those follow the ADR-003
+# exception procedure (see ADR-012).
+version: 2
+updates:
+  - package-ecosystem: "uv"
+    directory: "/backend"
+    schedule:
+      interval: "monthly"
+    cooldown:
+      default-days: 7
+    groups:
+      uv-dependencies:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    schedule:
+      interval: "monthly"
+    cooldown:
+      default-days: 7
+    groups:
+      npm-dependencies:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    cooldown:
+      default-days: 7
+    groups:
+      github-actions:
+        patterns:
+          - "*"

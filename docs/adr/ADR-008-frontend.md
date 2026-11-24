@@ -89,6 +89,51 @@ Para la librería de interfaz: ecosistema y soporte de la IA.
 - **4. Peso de Recharts: pendiente de medir** con la primera compilación del frontend.
 - **Copias de prueba por PR:** Render las crea también para los sitios estáticos, cada una con su propia URL `onrender.com`, y son gratis si el sitio es gratuito: «If your base service is a free static site, its PR previews are also free». Vienen desactivadas por defecto («By default, Render does *not* create PR previews») y hay que activarlas al crear el sitio ([Render · Service previews](https://render.com/docs/service-previews)).
 
+## Seguimiento · 2026-11-24: creación del sitio en Render
+
+Hechos comprobados por Pablo el 2026-11-24 en el panel y en el registro de Render. El registro no es público, así que se citan sus líneas.
+
+### Configuración del sitio
+
+| Ajuste | Valor |
+| --- | --- |
+| Nombre | `observador-coyuntura` |
+| URL | <https://observador-coyuntura.onrender.com> |
+| Rama | `main` |
+| Root Directory | `frontend/` |
+| Build Command | `npm ci && npm run build` |
+| Publish Directory | `dist` |
+| Variables de entorno | `SKIP_INSTALL_DEPS=true` (ver más abajo) |
+
+### Condición 1 (despliegue solo tras pasar la CI): resuelta
+
+La opción «After CI Checks Pass» aparece en el formulario de creación de un sitio estático y está seleccionada. No hace falta desplegar a mano ni pasar a Cloudflare Pages.
+
+### Una sola instalación de dependencias
+
+- **Instalación automática de Render:** antes del comando de compilación, Render instala por su cuenta las dependencias del sitio estático (el registro muestra «Installing dependencies with npm...»). La documentación lo describe así: «By default, Render automatically attempts to detect and install your static site's dependencies» ([Render · Static Sites](https://render.com/docs/static-sites), «Dependency installation»).
+- **Se desactiva con `SKIP_INSTALL_DEPS=true`.** La misma página indica añadir esa variable con el valor `true` para incluir después la instalación propia en el comando de compilación. La lista de variables de Render la describe como «Set this to `true` to skip running `yarn`/`npm install` during build» ([Render · Default Environment Variables](https://render.com/docs/environment-variables), «Optional environment variables», Node.js).
+- **Motivo:** que solo haya una instalación, el `npm ci` del comando de compilación, que instala exactamente lo que fija `package-lock.json` ([ADR-011](ADR-011-frontend-npm-node-ci.md)).
+- **Comprobado:** tras el cambio, el registro solo muestra la instalación del comando de compilación.
+- **No documentado:** la línea literal «Installing dependencies with npm...» no aparece en las páginas leídas.
+
+### Caché de compilación
+
+- Render descarga una caché entre compilaciones (registro: «Downloaded and extracted 74 MiB cache»). La documentación la menciona de forma general para los servicios, con la opción «Clear build cache & deploy», que evita reutilizar «any artifacts generated during a previous build» ([Render · Deploys](https://render.com/docs/deploys)). No describe una caché propia de los sitios estáticos.
+- **No afecta al resultado:** `npm ci` borra `node_modules` antes de instalar y comprueba cada paquete contra el hash de integridad del lockfile.
+
+### Reproducibilidad
+
+La compilación es idéntica en local y en Render: el mismo fichero `index-gz4drcWc.js`, de 219,67 kB.
+
+### Copias de prueba por PR
+
+- **Activadas en modo Manual:** solo se crea una copia si el PR lleva la etiqueta `render-preview` o el título incluye «[render preview]».
+- **Motivo:** compilar solo cuando Pablo lo pide, para no gastar la cuota compartida con el backend (consecuencia 2).
+- **Pendiente:** la documentación de Render no dice si crea copias para PR que vienen de un fork, y cualquiera que abra un PR puede escribir el disparador en el título.
+  - **Riesgo bajo hoy:** el sitio no tiene secretos en sus variables de entorno.
+  - **Revisar** cuando el frontend tenga variables sensibles.
+
 ## Anexo A · Alojamiento del sitio estático
 
 **Opción elegida: Render Static Sites** (ver Decisión). La comparación se conserva como registro.
